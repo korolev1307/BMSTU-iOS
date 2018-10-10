@@ -7,14 +7,14 @@
 //
 
 import Foundation
-protocol PrintAll {
-   func PrintPart()
+protocol Printable {
+   func PrintData()
 }
 
 enum currentValue: String {
-    case RUR = "RUR"
-    case USD = "USD"
-    case EUR = "EUR"
+    case RUR
+    case USD
+    case EUR
 }
 
 class MainData {
@@ -33,7 +33,7 @@ class MainData {
     }
 }
 
-class Account: MainData, PrintAll {
+class Account: MainData, Printable {
     let Description: String
     var Offer: String?
     
@@ -45,13 +45,13 @@ class Account: MainData, PrintAll {
         super.init(id: id, balance: balance, currency: currency) //Why it's not working before Description and Offer init?
     }
     
-    func PrintPart() {
+    func PrintData() {
         super.PrintMain()
         print("Account:\n Description:\(Description) Offer:\(Offer ?? "Not Stated")\n\n")
     }
 }
 
-class ReissueInfo: PrintAll {
+class ReissueInfo: Printable {
     let Date: Date
     let Info: String
     let Address: String
@@ -63,14 +63,14 @@ class ReissueInfo: PrintAll {
         self.Address = Address
     }
     
-    func PrintPart() {
+    func PrintData() {
         let GoodDate = DateFormatter()
         GoodDate.dateFormat = "dd --- MM --- YYYY"
         print("ReissueInfo:\n Date: \(GoodDate.string(from: Date)) Info: \(Info) Address: \(Address)\n\n")
     }
 }
 
-class Card: MainData, PrintAll {
+class Card: MainData, Printable {
     var ReissueInfo: ReissueInfo?
     
     init(id: Int, balance: Double, currency: String, ReissueInfo: ReissueInfo? = nil) {
@@ -80,15 +80,15 @@ class Card: MainData, PrintAll {
         super.init(id: id, balance: balance, currency: currency)
     }
     
-    func PrintPart() {
+    func PrintData() {
         super.PrintMain()
         if let ReissueInfo = ReissueInfo {
-            ReissueInfo.PrintPart()
+            ReissueInfo.PrintData()
         }
     }
 }
 
-class ServerResponce: PrintAll {
+class ServerResponce: Printable {
     var Cards: [Card]
     var Accounts: [Account]
     
@@ -97,12 +97,12 @@ class ServerResponce: PrintAll {
         self.Accounts = Accounts
     }
     
-    func PrintPart() {
+    func PrintData() {
         for Card in Cards {
-            Card.PrintPart()
+            Card.PrintData()
         }
         for Account in Accounts {
-            Account.PrintPart()
+            Account.PrintData()
         }
     }
 }
@@ -120,7 +120,7 @@ let card2 = Card(id: 4, balance: 228, currency: "RUR") //reissueInfo = nil
 let cards = [card1, card2]
 let response = ServerResponce(Cards: cards, Accounts: accs)
 
-var array: [PrintAll] = []
+var array: [Printable] = []
 
 array.append(contentsOf: cards)
 
@@ -129,5 +129,5 @@ array.append(contentsOf: accs)
 array.append(response)
 
 for item in array {
-    item.PrintPart()
+    item.PrintData()
 }
