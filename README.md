@@ -1,1 +1,1 @@
-# BMSTU-iOS
+# ДЗ по курсу iOS в BMSTU
